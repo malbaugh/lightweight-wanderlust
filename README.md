@@ -2,7 +2,7 @@
 
 This repo is a lightweight implementation of Wanderlust from the OpenAI DevDay.
 
-![Demo](https://ai-wanderlust-public-images.s3.amazonaws.com/wanderlust_demo.gif)
+![Demo](./public/wanderlust_demo.gif)
 
 ### Getting Started
 
