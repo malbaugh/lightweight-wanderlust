@@ -1,0 +1,16 @@
+{
+  "name": "changeMapZoomLevel",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "zoomLevel": {
+        "type": "integer",
+        "description": "The zoom level for the map, ranging from 0 (the whole world) up to the maximum zoom level (22).",
+        "minimum": 0,
+        "maximum": 22
+      }
+    },
+    "required": ["zoomLevel"]
+  },
+  "description": "Changes the zoom level on the Google Map so the user can see different details at particular zoom level."
+}

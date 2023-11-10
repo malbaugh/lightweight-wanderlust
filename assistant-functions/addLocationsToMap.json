@@ -1,0 +1,97 @@
+{
+  "name": "addLocationsToMap",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "centerLatitude": {
+        "type": "number",
+        "description": "The latitude of the centerpoint."
+      },
+      "centerLongitude": {
+        "type": "number",
+        "description": "The longitude of the centerpoint."
+      },
+      "zoomLevel": {
+        "type": "integer",
+        "description": "The zoom level for the map, ranging from 0 (the whole world) up to the maximum zoom level (22).",
+        "minimum": 0,
+        "maximum": 22
+      },
+      "markers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number",
+              "description": "Latitude of the location."
+            },
+            "lng": {
+              "type": "number",
+              "description": "Longitude of the location."
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "historical_landmark",
+                "natural_reserve",
+                "tourist_attraction",
+                "shopping_mall",
+                "recreational_park",
+                "university_campus",
+                "art_museum",
+                "public_library",
+                "train_station",
+                "airport_terminal",
+                "hospital_facility",
+                "government_building",
+                "sports_arena",
+                "industrial_complex",
+                "residential_area",
+                "corporate_office",
+                "tech_startup",
+                "cultural_center",
+                "beach_access",
+                "mountain_peak",
+                "campsite_location",
+                "fishing_spot",
+                "historical_battlefield",
+                "archaeological_site",
+                "astronomical_observatory",
+                "restaurant",
+                "trattoria",
+                "cafe",
+                "bistro",
+                "boutique_hotel",
+                "bed_and_breakfast",
+                "monument",
+                "bridge",
+                "opera_house",
+                "theater",
+                "cinema",
+                "concert_hall",
+                "botanical_garden",
+                "zoo",
+                "aquarium",
+                "theme_park",
+                "gallery",
+                "scenic_viewpoint",
+                "vineyard",
+                "brewery",
+                "distillery",
+                "street_market",
+                "food_truck",
+                "local_farm"
+              ],
+              "description": "Type of location to mark."
+            }
+          },
+          "required": ["lat", "lng", "type"]
+        },
+        "description": "An array of markers to place on the map."
+      }
+    },
+    "required": ["markers", "centerLatitude", "centerLongitude", "zoomLevel"]
+  },
+  "description": "Marks multiple locations on the Google Map with different types of markers so the user can identify locations on the map."
+}

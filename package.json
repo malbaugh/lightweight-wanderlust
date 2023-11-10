@@ -1,0 +1,40 @@
+{
+  "name": "wanderlust",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.16",
+    "@mui/material": "^5.14.17",
+    "@react-google-maps/api": "^2.19.2",
+    "axios": "^1.6.0",
+    "framer-motion": "^10.16.4",
+    "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
+    "mui-markdown": "^1.1.11",
+    "next": "14.0.1",
+    "openai": "^4.16.1",
+    "react": "^18",
+    "react-dom": "^18",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/uuid": "^9.0.7",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.1",
+    "typescript": "^5"
+  }
+}

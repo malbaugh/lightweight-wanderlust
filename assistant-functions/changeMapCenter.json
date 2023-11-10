@@ -1,0 +1,24 @@
+{
+  "name": "changeMapCenter",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "latitude": {
+        "type": "number",
+        "description": "The latitude of the centerpoint."
+      },
+      "longitude": {
+        "type": "number",
+        "description": "The longitude of the centerpoint."
+      },
+      "zoomLevel": {
+        "type": "integer",
+        "description": "The zoom level for the map, ranging from 0 (the whole world) up to the maximum zoom level (22).",
+        "minimum": 0,
+        "maximum": 22
+      }
+    },
+    "required": ["latitude", "longitude", "zoomLevel"]
+  },
+  "description": "Changes the center point on the google map so the user can see that area on the map."
+}
