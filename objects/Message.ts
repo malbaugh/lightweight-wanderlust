@@ -1,14 +1,19 @@
 import { ThreadMessage } from "openai/resources/beta/threads/messages/messages.mjs";
 import { v4 as genUUID } from "uuid";
 
+export type MessageType =
+  | "center"
+  | "zoom"
+  | "mark"
+  | "file"
+  | "read-file"
+  | "flight"
+  | "dialog";
 export interface Message extends ThreadMessage {
-  type: "zoom" | "mark" | "center" | "dialog";
+  type: MessageType;
 }
 
-export function generateAnnotation(
-  text: string,
-  type: "zoom" | "mark" | "center" | "dialog"
-): Message {
+export function generateAnnotation(text: string, type: MessageType): Message {
   return {
     assistant_id: "",
     content: [{ type: "text", text: { value: text, annotations: [] } }],

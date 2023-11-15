@@ -1,0 +1,94 @@
+{
+  "name": "updateFlightInfo",
+  "description": "Updates flight information for both outbound and inbound trips, including details of each flight, the airline, and the total cost.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "outboundTrip": {
+        "type": "object",
+        "properties": {
+          "flights": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "departure": {
+                  "type": "boolean",
+                  "description": "Indicates if the flight is a departure flight."
+                },
+                "destination": {
+                  "type": "string",
+                  "description": "The destination of the flight."
+                },
+                "airport": {
+                  "type": "string",
+                  "description": "The airport from which the flight departs or arrives."
+                },
+                "arrival": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "The arrival time of the flight."
+                }
+              },
+              "required": ["departure", "destination", "airport", "arrival"]
+            },
+            "description": "An array of flights for the outbound trip."
+          },
+          "airline": {
+            "type": "string",
+            "description": "The airline operating the flights."
+          },
+          "cost": {
+            "type": "string",
+            "description": "The total cost of the outbound trip."
+          }
+        },
+        "required": ["flights", "airline", "cost"],
+        "description": "Information about the outbound trip."
+      },
+      "inboundTrip": {
+        "type": "object",
+        "properties": {
+          "flights": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "departure": {
+                  "type": "boolean",
+                  "description": "Indicates if the flight is a departure flight."
+                },
+                "destination": {
+                  "type": "string",
+                  "description": "The destination of the flight."
+                },
+                "airport": {
+                  "type": "string",
+                  "description": "The airport from which the flight departs or arrives."
+                },
+                "arrival": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "The arrival time of the flight."
+                }
+              },
+              "required": ["departure", "destination", "airport", "arrival"]
+            },
+            "description": "An array of flights for the inbound trip."
+          },
+          "airline": {
+            "type": "string",
+            "description": "The airline operating the flights."
+          },
+          "cost": {
+            "type": "string",
+            "description": "The total cost of the inbound trip."
+          }
+        },
+        "required": ["flights", "airline", "cost"],
+        "description": "Information about the inbound trip."
+      }
+    },
+    "required": ["outboundTrip", "inboundTrip"]
+  }
+}

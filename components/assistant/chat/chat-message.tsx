@@ -4,6 +4,9 @@ import ExploreIcon from "@mui/icons-material/ExploreOutlined";
 import ZoomIcon from "@mui/icons-material/ZoomOutMapOutlined";
 import MarkerIcon from "@mui/icons-material/PlaceOutlined";
 import GlobeIcon from "@mui/icons-material/PublicOutlined";
+import SearchIcon from "@mui/icons-material/SearchOutlined";
+import FileIcon from "@mui/icons-material/InsertDriveFileOutlined";
+import FlightIcon from "@mui/icons-material/FlightOutlined";
 import { Message } from "@objects";
 
 type Props = {
@@ -55,6 +58,36 @@ function ChatMessage({ message, lastMessage }: Props) {
           )}
           {message.type === "dialog" && (
             <ExploreIcon
+              sx={{
+                fontWeight: 500,
+                color: lastMessage ? "text.primary" : "text.secondary",
+                height: 32,
+                width: 32,
+              }}
+            />
+          )}
+          {message.type === "file" && (
+            <FileIcon
+              sx={{
+                fontWeight: 500,
+                color: lastMessage ? "text.primary" : "text.secondary",
+                height: 32,
+                width: 32,
+              }}
+            />
+          )}
+          {message.type === "read-file" && (
+            <SearchIcon
+              sx={{
+                fontWeight: 500,
+                color: lastMessage ? "text.primary" : "text.secondary",
+                height: 32,
+                width: 32,
+              }}
+            />
+          )}
+          {message.type === "flight" && (
+            <FlightIcon
               sx={{
                 fontWeight: 500,
                 color: lastMessage ? "text.primary" : "text.secondary",

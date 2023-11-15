@@ -22,7 +22,9 @@ export const GET = async function handler(
         params.threadId
       );
       return NextResponse.json({
-        newMessages: threadMessages.data.map((msg) => generateMessage(msg)),
+        newMessages: threadMessages.data
+          .filter((msg) => msg.file_ids.length === 0)
+          .map((msg) => generateMessage(msg)),
       });
     } else {
       return NextResponse.json(

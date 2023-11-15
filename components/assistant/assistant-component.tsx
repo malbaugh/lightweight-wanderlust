@@ -1,15 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, DragEvent } from "react";
 import { Box, Input, Typography } from "@mui/material";
 import {
   AssistantComponentSkeleton,
   ChatHistory,
+  FlightPopup,
   InteractiveMap,
+  PromptInput,
 } from "@components";
 import {
   Center,
+  FlightInfo,
   Marker,
   Message,
   ToolOutput,
+  Trip,
   generateAnnotation,
 } from "@objects";
 import axios from "axios";
@@ -27,8 +31,6 @@ const isRunActive = (run: Run | null): boolean => {
 };
 
 function AssistantComponent({ threadId }: { threadId: string }) {
-  // Settings
-
   // Ref to scroll to the bottom of the chat history
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   // Map state
@@ -45,6 +47,8 @@ function AssistantComponent({ threadId }: { threadId: string }) {
   const [assistantWriting, setAssistantWriting] = useState<boolean>(false);
   // Loading state
   const [loading, setLoading] = useState<boolean>(true);
+  // Flight info state
+  const [flightInfo, setFlightInfo] = useState<FlightInfo | null>(null);
 
   // Poll for the run status
   const pollRunStatus = useCallback(() => {
@@ -117,6 +121,15 @@ function AssistantComponent({ threadId }: { threadId: string }) {
             tool_call_id: action.id,
             output: response,
           });
+        } else if (action.function.name === "updateFlightInfo") {
+          const response = await updateFlightInfo(
+            args.inboundTrip,
+            args.outboundTrip
+          );
+          outputs.push({
+            tool_call_id: action.id,
+            output: response,
+          });
         }
       }
     }
@@ -155,6 +168,22 @@ function AssistantComponent({ threadId }: { threadId: string }) {
     setMapZoomLevel(zoomLevel);
     setPointsOfInterest(locations);
     return "Map locations marked successfully.";
+  }
+
+  async function updateFlightInfo(
+    inboundTrip: Trip,
+    outboundTrip: Trip
+  ): Promise<string> {
+    Logger.debug(`Updating flight info`);
+    setFlightInfo({
+      inboundTrip: inboundTrip,
+      outboundTrip: outboundTrip,
+    });
+    setMessages([
+      ...messages,
+      generateAnnotation("Displaying flight information", "flight"),
+    ]);
+    return "Flight information displayed successfully.";
   }
 
   // API Calls
@@ -239,6 +268,7 @@ function AssistantComponent({ threadId }: { threadId: string }) {
     Logger.debug("Handling prompt submission");
     const messageContent = userPrompt;
     setUserPrompt("");
+    setAssistantWriting(true);
 
     return axios
       .post(`/api/threads/${threadId}/messages`, {
@@ -248,10 +278,10 @@ function AssistantComponent({ threadId }: { threadId: string }) {
         const { message, run }: { message: Message; run: Run } = response.data;
         setMessages([...messages, message]);
         setCurrentRun(run);
-        setAssistantWriting(true);
       })
       .catch((error) => {
         Logger.error(error);
+        setAssistantWriting(false);
       });
   }
 
@@ -270,19 +300,45 @@ function AssistantComponent({ threadId }: { threadId: string }) {
       });
   }
 
+  const handleFileSubmission = async (file: File) => {
+    const body = new FormData();
+    body.append("file", file);
+    setAssistantWriting(true);
+
+    await axios
+      .post(`/api/threads/${threadId}/messages/files`, body, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        setCurrentRun(response.data.run);
+        setMessages([
+          ...messages,
+          generateAnnotation(file.name, "file"),
+          generateAnnotation("Read files", "read-file"),
+        ]);
+      })
+      .catch((error) => {
+        console.log(error);
+        setAssistantWriting(false);
+      });
+  };
+
   if (loading) return <AssistantComponentSkeleton />;
 
   return (
     <>
       <Box
         sx={{
-          mx: 4,
+          mx: { xs: 1, md: 4 },
           display: "flex",
-          gap: 4,
-          height: "calc(100vh - 96px - 88px)",
+          flexDirection: { xs: "column", md: "row" },
+          gap: { xs: 1, md: 4 },
+          height: { xs: "auto", md: "calc(100vh - 96px - 88px)" },
         }}
       >
-        <Box sx={{ width: "50%" }}>
+        <Box sx={{ width: { xs: "100%", md: "50%" } }}>
           {messages.length === 0 ? (
             <Box
               sx={{
@@ -296,19 +352,12 @@ function AssistantComponent({ threadId }: { threadId: string }) {
               <Typography variant="h3" sx={{ fontSize: "1.4rem" }}>
                 Where would you like to go?
               </Typography>
-              <Input
-                fullWidth
-                disableUnderline
-                value={userPrompt}
-                onChange={(event) => setUserPrompt(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    handlePromptSubmission();
-                  }
-                }}
-                disabled={assistantWriting}
-                placeholder="Start typing..."
-                sx={{ fontSize: "1.6rem" }}
+              <PromptInput
+                userPrompt={userPrompt}
+                setUserPrompt={setUserPrompt}
+                onPromptSubmission={handlePromptSubmission}
+                onFileUpload={handleFileSubmission}
+                assistantWriting={assistantWriting}
               />
             </Box>
           ) : (
@@ -332,30 +381,28 @@ function AssistantComponent({ threadId }: { threadId: string }) {
 
                 <div ref={messagesEndRef} />
               </Box>
-
-              <Input
-                fullWidth
-                disableUnderline
-                value={userPrompt}
-                onChange={(event) => setUserPrompt(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    handlePromptSubmission();
-                  }
-                }}
-                disabled={assistantWriting}
-                placeholder="Start typing or upload a file..."
-                sx={{ fontSize: "1.6rem", fontWeight: 600 }}
+              <PromptInput
+                userPrompt={userPrompt}
+                setUserPrompt={setUserPrompt}
+                onPromptSubmission={handlePromptSubmission}
+                onFileUpload={handleFileSubmission}
+                assistantWriting={assistantWriting}
               />
             </Box>
           )}
         </Box>
-        <Box sx={{ flexGrow: 1 }}>
+        <Box
+          sx={{
+            position: "relative",
+            width: { xs: "100%", md: "50%" },
+          }}
+        >
           <InteractiveMap
             mapCenter={mapCenter}
             mapZoomLevel={mapZoomLevel}
             pointsOfInterest={pointsOfInterest}
           />
+          <FlightPopup flightInfo={flightInfo} />
         </Box>
       </Box>
     </>

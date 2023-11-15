@@ -30,6 +30,7 @@ You can build an assistant in the OpenAI Playground with the following settings:
   - `addLocationsToMap`
   - `changeMapCenter`
   - `changeMapZoomLevel`
+  - `updateFlightInfo`
 - Turn on:
   - Code Interpreter
   - Retrieval
